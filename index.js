@@ -26,7 +26,7 @@ internals.walk = function (data) {
 
   if (_.isArray(data)) {
     if (data.length > 1) {
-      return _.map(data, (item) => {
+      return _.map(data, function(item) {
 
         return internals.walk(item);
       });
@@ -36,7 +36,7 @@ internals.walk = function (data) {
     }
   }
   else if (_.isObject(data)) {
-    return _.reduce(data, (memo, v, k) => {
+    return _.reduce(data, function(memo, v, k) {
 
       memo[internals.formatTagName(k)] = internals.walk(v);
       return memo;
@@ -87,7 +87,7 @@ internals.parse = function (xml, req, cb, explicitAttributes) {
   }
 
 
-  Xml2js.parseString(xml, { ignoreAttrs: ignoreAttrs, attrkey: attrkey, trim: true, charkey: charkey }, (err, data) => {
+  Xml2js.parseString(xml, { ignoreAttrs: ignoreAttrs, attrkey: attrkey, trim: true, charkey: charkey }, function(err, data) {
 
     if (err) {
       return cb(err);
@@ -98,7 +98,7 @@ internals.parse = function (xml, req, cb, explicitAttributes) {
 
     // We need to know the request action in order to know the tag names.
     if (data.Response && _.isArray(data.Response.Errors)) {
-      return cb(new Error(data.Response.Errors.reduce((memo, error) => {
+      return cb(new Error(data.Response.Errors.reduce(function(memo, error) {
 
         if (memo) {
           memo += '\n';
@@ -117,9 +117,9 @@ internals.parse = function (xml, req, cb, explicitAttributes) {
     data = data[responseKey]['aws:Response'];
 
     // Batch requests support
-    let all = [];
+    var all = [];
     try {
-      for (let i = 0; i < data.length; ++i) {
+      for (var i = 0; i < data.length; ++i) {
         // Require all responses to be valid
         all.push(validateResponse(data[i], json));
       }
@@ -149,7 +149,7 @@ internals.query = function (req, options) {
   // Request keys must be sorted with natural byte ordering.
   // http://docs.aws.amazon.com/AlexaWebInfoService/latest/index.html?CalculatingSignatures.html
   var keys = Object.keys(req).sort();
-  var q = keys.reduce((memo, k) => {
+  var q = keys.reduce(function(memo, k) {
 
     if (memo) {
       memo += '&';
@@ -177,7 +177,7 @@ module.exports = function (options) {
     Request({
       url: 'http://' + internals.apiDomain,
       qs: internals.query(req, options)
-    }, (err, res) => {
+    }, function(err, res) {
 
       if (err) {
         return cb(err);
