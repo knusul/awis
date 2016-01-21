@@ -1,12 +1,12 @@
 'use strict';
 
 
-const Assert = require('assert');
-const Awis = require('../');
-const _ = require('underscore');
+var Assert = require('assert');
+var Awis = require('../');
+var _ = require('underscore');
 
 
-const options = {
+var options = {
   key: process.env.AWSACCESSKEYID,
   secret: process.env.AWSSECRETACCESSKEY
 };
